@@ -1,0 +1,9 @@
+{
+  "name": "@ydbi/ui-tokens",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Design tokens — colors, typography, motion, spacing — shared across web and native",
+  "type": "module",
+  "main": "./index.js",
+  "scripts": {}
+}

@@ -1,0 +1,9 @@
+{
+  "name": "@ydbi/ios",
+  "version": "0.0.1",
+  "private": true,
+  "description": "YDBI iOS — Swift + SwiftUI native client. Xcode project lives here.",
+  "scripts": {
+    "open": "open YDBI.xcworkspace"
+  }
+}

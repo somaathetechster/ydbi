@@ -1,0 +1,28 @@
+{
+  "name": "ydbi",
+  "version": "0.0.1",
+  "private": true,
+  "description": "YDBI — Your Digital Butler Intelligence. Domani in-house product.",
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=10.0.0"
+  },
+  "scripts": {
+    "dev": "pnpm --parallel --filter './apps/*' --filter './services/*' dev",
+    "build": "pnpm --recursive build",
+    "lint": "pnpm --recursive lint",
+    "typecheck": "pnpm --recursive typecheck",
+    "migrate": "pnpm --filter @ydbi/api migrate:up",
+    "migrate:create": "pnpm --filter @ydbi/api migrate:create",
+    "docker:up": "docker compose -f infra/docker/docker-compose.yml up -d",
+    "docker:down": "docker compose -f infra/docker/docker-compose.yml down",
+    "docker:reset": "docker compose -f infra/docker/docker-compose.yml down -v && docker compose -f infra/docker/docker-compose.yml up -d"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "@types/node": "^20.12.0",
+    "prettier": "^3.2.5",
+    "eslint": "^9.0.0"
+  }
+}

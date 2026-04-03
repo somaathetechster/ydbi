@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "declaration": true,
+    "sourceMap": true,
+    "outDir": "dist",
+    "paths": {
+      "@ydbi/sdk": ["../sdk/src/index.ts"],
+      "@ydbi/sdk/*": ["../sdk/src/*"]
+    }
+  },
+  "include": ["src/**/*", "../sdk/src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

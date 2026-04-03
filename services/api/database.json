@@ -1,0 +1,24 @@
+{
+  "defaultEnv": "development",
+  "development": {
+    "url": {
+      "ENV": "DATABASE_URL"
+    },
+    "dir": "migrations",
+    "migrationsTable": "schema_migrations",
+    "checkOrder": true,
+    "verbose": true,
+    "dotenv": {
+      "path": "../../.env"
+    }
+  },
+  "production": {
+    "url": {
+      "ENV": "DATABASE_URL"
+    },
+    "dir": "migrations",
+    "migrationsTable": "schema_migrations",
+    "checkOrder": true,
+    "verbose": false
+  }
+}

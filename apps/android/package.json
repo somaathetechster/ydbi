@@ -1,0 +1,9 @@
+{
+  "name": "@ydbi/android",
+  "version": "0.0.1",
+  "private": true,
+  "description": "YDBI Android — Kotlin + Jetpack Compose native client. Gradle project lives here.",
+  "scripts": {
+    "open": "studio ."
+  }
+}

@@ -1,0 +1,87 @@
+services:
+
+  # ── PostgreSQL 16 + pgvector ──────────────────────────────────────────────
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: ydbi_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ydbi_dev
+      POSTGRES_USER: ydbi
+      POSTGRES_PASSWORD: ydbi_dev_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./volumes/postgres:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ydbi -d ydbi_dev"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ── Redis 7 ──────────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: ydbi_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./volumes/redis:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # ── MinIO — S3-compatible object storage ─────────────────────────────────
+  minio:
+    image: minio/minio:latest
+    container_name: ydbi_minio
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: ydbi_dev
+      MINIO_ROOT_PASSWORD: ydbi_dev_secret
+    ports:
+      - "9000:9000"   # S3 API
+      - "9001:9001"   # Web console
+    volumes:
+      - ./volumes/minio:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── MinIO bucket setup (runs once, creates required buckets) ──────────────
+  minio-init:
+    image: minio/mc:latest
+    container_name: ydbi_minio_init
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+        mc alias set local http://minio:9000 ydbi_dev ydbi_dev_secret;
+        mc mb --ignore-existing local/ydbi-audio;
+        mc mb --ignore-existing local/ydbi-attachments;
+        mc anonymous set download local/ydbi-audio;
+        echo 'MinIO buckets ready.';
+      "
+
+  # ── Mailpit — email dev server (SMTP + web UI) ────────────────────────────
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: ydbi_mailpit
+    restart: unless-stopped
+    ports:
+      - "1025:1025"   # SMTP
+      - "8025:8025"   # Web UI — open http://localhost:8025
+
+volumes:
+  postgres:
+  redis:
+  minio:
